@@ -17,7 +17,7 @@ Puoi avviare l'installer interattivo su qualsiasi sistema Raspberry Pi OS o Linu
 curl -sSL https://raw.githubusercontent.com/picoder-web/apa-calendario/refs/heads/main/install.sh | bash
 ```
 
-### Con `curl`:
+### Con `wget`:
 ```bash
 wget -qO- https://raw.githubusercontent.com/picoder-web/apa-calendario/refs/heads/main/install.sh | bash
 ```
