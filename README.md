@@ -10,12 +10,12 @@ Puoi avviare l'installer interattivo direttamente dal terminale eseguendo **uno 
 
 ### Con `curl`:
 ```bash
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/picoder-web/apa-calendario/refs/heads/v2.1-rc.1/install.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/picoder-web/apa-calendario/main/install.sh)"
 ```
 
 ### Con `wget`:
 ```bash
-bash -c "$(wget -qO- https://raw.githubusercontent.com/picoder-web/apa-calendario/refs/heads/v2.1-rc.1/install.sh)"
+bash -c "$(wget -qO- https://raw.githubusercontent.com/picoder-web/apa-calendario/main/install.sh)"
 ```
 
 > ⚠️ **Nota di sicurezza sull'utente:**  
