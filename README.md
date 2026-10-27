@@ -4,7 +4,7 @@ Uno script Bash interattivo per **Raspberry Pi OS** e **Ubuntu** (con ambienti X
 
 ---
 
-## 🚀 Installazione Rapida (Comando Unico)
+## Installazione Rapida (Comando Unico)
 
 Puoi avviare l'installer interattivo direttamente dal terminale eseguendo **uno dei seguenti comandi**:
 
