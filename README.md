@@ -1,12 +1,12 @@
-# 📅 APA Calendario Dual-Monitor
+# 🖥️ APA Calendario - Dual-Monitor Installer
 
-Uno strumento completo ed efficace progettato per **Raspberry Pi OS** e **Ubuntu** (compatibile sia con sessioni **X11** sia con **Wayland/XWayland**) che automatizza la configurazione, l'avvio e la supervisione di due istanze indipendenti del browser a schermo intero posizionate su due monitor affiancati.
+Uno script Bash interattivo per **Raspberry Pi OS** e **Ubuntu** (con ambienti X11 o Wayland/XWayland) per installare, configurare e monitorare due istanze del browser (Chromium/Chrome) a schermo intero su due monitor affiancati.
 
 ---
 
 ## 🚀 Installazione Rapida (Comando Unico)
 
-Puoi avviare l'installer interattivo direttamente dal tuo terminale eseguendo uno dei seguenti comandi (scegli tra `curl` o `wget`):
+Puoi avviare l'installer interattivo direttamente dal terminale eseguendo **uno dei seguenti comandi**:
 
 ### Con `curl`:
 ```bash
@@ -18,95 +18,103 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/picoder-web/apa-calendar
 bash -c "$(wget -qO- https://raw.githubusercontent.com/picoder-web/apa-calendario/refs/heads/v2.1-rc.1/install.sh)"
 ```
 
-> ⚠️ **Nota sull'utente:**  
-> L'installer **non va eseguito con l'utente `root` o tramite `sudo`**. Esegui il comando come utente standard. Se lanciato accidentalmente tramite `sudo`, lo script individua l'utente originale tramite la variabile `$SUDO_USER` e si riavvia automaticamente mantenendo l'ambiente corretto.
+> ⚠️ **Nota di sicurezza sull'utente:**  
+> L'installer **non deve essere eseguito direttamente da `root`**. Eseguilo con il tuo normale utente di sistema. Se lanciato con `sudo`, lo script riconosce l'utente originale tramite `$SUDO_USER` e si riavvia automaticamente senza privilegi elevati.
 
 ---
 
 ## 📋 Requisiti e Dipendenze
 
-Durante l'esecuzione, l'installer verifica autonomamente l'ambiente di sistema. Se utilizzi Ubuntu o Raspberry Pi OS con gestione pacchetti `apt`, **lo script proverà ad installare automaticamente i pacchetti mancanti**.
+Lo script verifica la presenza dei componenti necessari durante la procedura di installazione. Se utilizzi Ubuntu o Raspberry Pi OS, l'installer **tenterà di installare automaticamente tramite `apt`** le dipendenze mancanti.
 
-### 1. Pacchetti ed Utility di Sistema
-* **`x11-xserver-utils` (`xrandr`)**: Rileva la presenza, lo stato e le geometrie pixel delle uscite video collegate.
-* **`xdotool`**: Identifica e calcola la posizione delle finestre aperte dal browser.
-* **`wmctrl`**: Gestisce gli attributi della finestra (es. Fullscreen) e forza il posizionamento sui display se il Window Manager non risponde a `xdotool`.
+### 1. Utility di Sistema (Gestione Monitor e Finestre):
+* **`xrandr`** (`x11-xserver-utils`): Rileva lo stato e le geometrie delle uscite video collegate.
+* **`xdotool`** (`xdotool`): Identifica e posiziona le finestre del browser sui rispettivi monitor.
+* **`wmctrl`** (`wmctrl`): Gestisce la modalità Fullscreen e forza lo spostamento delle finestre se il Window Manager ignora `xdotool`.
 
-### 2. Browser Web
-Lo script cerca ed utilizza uno dei seguenti browser disponibili nel `$PATH`:
-* `chromium-browser` / `chromium` *(consigliato su Raspberry Pi OS)*
+### 2. Browser Web (almeno uno dei seguenti nel `$PATH`):
+* `chromium-browser` / `chromium` *(consigliato per Raspberry Pi OS)*
 * `google-chrome-stable` / `google-chrome`
 
 ---
 
-## 🛠️ Come Funziona l'Installer (`install.sh`)
+## ⚙️ Come Funziona l'Installer (`install.sh`)
 
-L'installer offre un menu a terminale completo con 5 opzioni:
+L'installer offre un menu a terminale con 5 opzioni principali:
 
-1. **Lettura Configurazione Precedente:** Rileva eventuali installazioni esistenti per mantenere e riproporre le impostazioni inserite in precedenza (URL monitor, intervalli di attesa, messaggio di errore).
-2. **Gestione del Versionamento:** Rileva la versione corrente, segnalando aggiornamenti, reinstallazioni o avvisi in caso di tentativi di declassamento (*downgrade*).
-3. **Configurazione Guidata Interattiva:**
-   * **URL Sinistra:** URL da mostrare sul monitor principale di sinistra *(Default: `https://www.google.com`)*.
-   * **URL Destra:** URL da mostrare sul monitor secondario di destra *(Default: `https://www.youtube.com`)*.
-   * **Messaggio di errore custom:** Testo da mostrare a terminale qualora non vengano rilevati 2 monitor attivi.
-   * **Delay di avvio:** Tempo di attesa iniziale espresso in secondi prima che vengano lanciati i browser al boot del sistema.
-4. **Generazione dell'Applicativo (`~/calendario/calendario.sh`):** Scrive lo script operativo integrando opzioni per disabilitare il portachiavi (`--password-store=basic`), prevenire i popup di ripristino sessione e isolare i profili browser.
-5. **Configurazione Autostart:** Crea/Aggiorna il file di avvio automatico all'accesso utente in `~/.config/autostart/calendario-dual.desktop`.
+```text
+Scegli un'opzione per procedere:
+ 1) Installa
+ 2) Reinstalla / Aggiorna (aggiorna i file mantenendo i log/struttura)
+ 3) Reinstalla da zero (Purge completo + Nuova installazione)
+ 4) Disinstalla (Purge completo di tutti i file dell'applicazione)
+ 5) Esci
+```
+
+### Logica di Esecuzione:
+1. **Rilevamento delle configurazioni precedenti:** Se il calendario è già stato installato, legge le URL e le impostazioni precedenti proponendole come valori predefiniti (*default*).
+2. **Controllo Versioni:** Confronta la versione già presente con la versione `2.1` dell'installer, avvisando in caso di aggiornamento, reinstallazione o downgrade.
+3. **Configurazione Interattiva:**
+   * **URL Sinistra:** Pagina web da mostrare sul monitor di sinistra *(Default: `https://www.google.com`)*.
+   * **URL Destra:** Pagina web da mostrare sul monitor di destra *(Default: `https://www.youtube.com`)*.
+   * **Messaggio di Errore:** Testo mostrato se non vengono rilevati esattamente 2 monitor.
+   * **Delay di Avvio:** Secondi di attesa dopo l'avvio del Desktop prima di lanciare i browser.
+4. **Generazione Script Principale (`~/calendario/calendario.sh`):** Genera l'applicativo con gestione dei log, rotazione automatica ed esclusione del portachiavi di sistema (`--password-store=basic`).
+5. **Comando Globale di Sistema (`apa-calendario`):** Crea un collegamento simbolico in `~/.local/bin/apa-calendario` (o `/usr/local/bin/apa-calendario` previa autorizzazione `sudo`) per consentire l'avvio rapido del programma digitando semplicemente `apa-calendario` da qualsiasi punto del terminale.
+6. **Autostart opzionale:** Configura o rimuove il file `.desktop` in `~/.config/autostart/calendario-dual.desktop` per avviare il tool ad ogni boot del sistema.
 
 ---
 
-## 🔍 Logica di Esecuzione di `calendario.sh`
+## 🛠️ Funzionamento dello Script Generato (`calendario.sh`)
 
-Una volta installato, lo script principale lavora nel seguente modo:
+Una volta completata l'installazione, lo script eseguirà in automatico:
 
-* **Profili Isolati:** Crea due cartelle profilo separate per Chromium (`~/chrome-dual-profili/monitor-1` e `monitor-2`) evitando qualsiasi conflitto di sessione o di dati.
-* **Supporto Wayland:** Se l'ambiente di desktop utilizza Wayland, viene aggiunto automaticamente l'argomento `--ozone-platform=x11` garantendo il corretto funzionamento XWayland per il posizionamento tramite X11.
-* **Validazione del Layout Monitor:**
-  * Effettua fino a 5 tentativi di rilevamento monitor all'avvio.
-  * Verifica che ci siano **esattamente 2 monitor collegati ed affiancati**.
-  * Riconosce e blocca la modalità **Mirroring** (stessa coordinata $X,Y$) o la disposizione verticale non supportata.
+* **Gestione dei Profili:** Crea due profili isolati per Chromium (`~/chrome-dual-profili/monitor-1` e `monitor-2`) per evitare conflitti tra istanze.
+* **Controllo Layout Dual-Monitor:**
+  * Verifica che ci siano **esattamente 2 monitor attivi**.
+  * Rileva e blocca situazioni di **mirroring** o layout non affiancati orizzontalmente.
+* **Supporto Wayland / X11:** Se viene rilevata una sessione Wayland, forza l'avvio di Chromium in modalità `--ozone-platform=x11` (XWayland) per garantire il corretto posizionamento multi-schermo.
 * **Supervisione in Background (Daemon):**
-  * Esegue un ciclo di controllo silenzioso in background ad intervalli regolari (120 secondi).
-  * Se una delle due finestre del browser termina inaspettatamente o i monitor scendono a meno di 2, applica la chiusura automatica pulita delle risorse residua (invio di segnale `SIGTERM` ed eventualmente `SIGKILL`).
-* **Gestione ed Archiviazione Log:**
-  * Log di monitoraggio ed avvio: `~/calendario/logs/calendario.log`
-  * Traccia dei soli errori critici: `~/calendario/logs/error.log`
-  * **Rotazione automatica dei log:** Quando i file di log superano i 5MB (5120 KB), vengono automaticamente archiviati con estensione `.old` e rigenerati per prevenire l'esaurimento dello spazio su disco.
+  * Esegue un controllo silenzioso ogni 120 secondi.
+  * Se una delle due finestre si chiude o viene scollegato un monitor, chiude in modo pulito tutte le istanze del browser.
+* **Gestione Log & Rotazione:**
+  * Salva i log completi in `~/calendario/logs/calendario.log`.
+  * Traccia gli errori critici in `~/calendario/logs/error.log`.
+  * Esegue la **rotazione automatica dei log** appena superano i 5MB.
 
 ---
 
-## 💻 Comandi Utili
+## 💻 Comandi Principali
 
-### Avvio manuale dello script
+### Avvio tramite Comando Personalizzato
+Una volta installato, puoi avviare l'applicazione inserendo semplicemente:
+```bash
+apa-calendario
+```
+
+### Avvio Diretto tramite Script
+In alternativa, puoi avviare lo script tramite il suo percorso originale:
 ```bash
 ~/calendario/calendario.sh
 ```
 
-### Avvio con URL temporanee (override da riga di comando)
-Puoi passare due URL al momento del lancio senza riconfigurare l'installer:
+### Sovrascrivere temporaneamente le URL da riga di comando
+Puoi passare le URL direttamente all'avvio:
 ```bash
-~/calendario/calendario.sh "https://dashboard1.example.com" "https://dashboard2.example.com"
+apa-calendario "https://link-sinistra.it" "https://link-destra.it"
 ```
 
-### Verifica delle versioni tramite installer
+### Verificare la Versione Installata
 ```bash
 bash install.sh --versione
 ```
 
 ---
 
-## 🗑️ Disinstallazione e Pulizia (Purge)
+## 🗑️ Disinstallazione e Purge
 
-Per eliminare totalmente l'applicazione ed i relativi file di configurazione dal sistema:
-
-1. Avvia nuovamente lo script di installazione:
-   ```bash
-   bash -c "$(curl -fsSL https://raw.githubusercontent.com/picoder-web/apa-calendario/refs/heads/v2.1-rc.1/install.sh)"
-   ```
-2. Seleziona l'opzione **`4) Disinstalla`**.
-
-Verranno rimossi:
-* Il file di avvio autostart (`~/.config/autostart/calendario-dual.desktop`)
-* I profili dati del browser (`~/chrome-dual-profili/`)
-* La directory principale dell'applicazione ed i relativi log (`~/calendario/`)
-```
+Puoi rimuovere completamente l'applicazione eseguendo l'installer e scegliendo l'opzione **4) Disinstalla**. Verranno rimossi:
+* Il collegamento al comando personalizzato (`apa-calendario`)
+* Il file di avvio automatico (`~/.config/autostart/calendario-dual.desktop`)
+* I profili del browser (`~/chrome-dual-profili/`)
+* La cartella principale dell'applicazione e dei log (`~/calendario/`)
