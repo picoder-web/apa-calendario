@@ -1,4 +1,4 @@
-# 🖥️ APA Calendario - Dual-Monitor Installer
+# APA Calendario - Dual-Monitor Installer
 
 Uno script Bash interattivo per **Raspberry Pi OS** e **Ubuntu** (con ambienti X11 o Wayland/XWayland) per installare, configurare e monitorare due istanze del browser (Chromium/Chrome) a schermo intero su due monitor affiancati.
 
@@ -23,7 +23,7 @@ bash -c "$(wget -qO- https://raw.githubusercontent.com/picoder-web/apa-calendari
 
 ---
 
-## 📋 Requisiti e Dipendenze
+## Requisiti e Dipendenze
 
 Lo script verifica la presenza dei componenti necessari durante la procedura di installazione. Se utilizzi Ubuntu o Raspberry Pi OS, l'installer **tenterà di installare automaticamente tramite `apt`** le dipendenze mancanti.
 
@@ -38,7 +38,7 @@ Lo script verifica la presenza dei componenti necessari durante la procedura di 
 
 ---
 
-## ⚙️ Come Funziona l'Installer (`install.sh`)
+## Come Funziona l'Installer (`install.sh`)
 
 L'installer offre un menu a terminale con 5 opzioni principali:
 
@@ -65,7 +65,7 @@ Scegli un'opzione per procedere:
 
 ---
 
-## 🛠️ Funzionamento dello Script Generato (`calendario.sh`)
+## Funzionamento dello Script Generato (`calendario.sh`)
 
 Una volta completata l'installazione, lo script eseguirà in automatico:
 
@@ -84,7 +84,7 @@ Una volta completata l'installazione, lo script eseguirà in automatico:
 
 ---
 
-## 💻 Comandi Principali
+## Comandi Principali
 
 ### Avvio tramite Comando Personalizzato
 Una volta installato, puoi avviare l'applicazione inserendo semplicemente:
@@ -111,7 +111,7 @@ bash install.sh --versione
 
 ---
 
-## 🗑️ Disinstallazione e Purge
+## Disinstallazione e Purge
 
 Puoi rimuovere completamente l'applicazione eseguendo l'installer e scegliendo l'opzione **4) Disinstalla**. Verranno rimossi:
 * Il collegamento al comando personalizzato (`apa-calendario`)
