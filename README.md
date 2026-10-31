@@ -3,6 +3,8 @@
 ![Versione](https://img.shields.io/badge/versione-2.1-informational)
 ![Piattaforma](https://img.shields.io/badge/Piattaforma-Raspberry%20Pi%20OS%20%7C%20Ubuntu-blue)
 ![Shell](https://img.shields.io/badge/Shell-bash-green)
+![Licenza: MIT](https://img.shields.io/badge/Licenza-MIT-yellow.svg)
+
 
 Trasforma un Raspberry Pi o un PC Ubuntu in un **display a doppio schermo**: due istanze di Chromium (o Chrome) si aprono a schermo intero su **due monitor affiancati**, ciascuna con la propria pagina web. L'applicazione può partire da sola all'accesso al desktop, si controlla in continuazione e chiude tutto in modo pulito in caso di errore.
 
